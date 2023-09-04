@@ -1,6 +1,10 @@
 import React from "react";
 import { useRouter } from "next/router";
-import { getEventById, getAllEvents } from "../../../helpers/api-utils";
+import {
+  getEventById,
+  getAllEvents,
+  getFeaturedEvents,
+} from "../../../helpers/api-utils";
 import EventSummary from "@/components/event-detail/event-summary";
 import EventLogistics from "@/components/event-detail/event-logistics";
 import EventContent from "@/components/event-detail/event-content";
@@ -57,6 +61,7 @@ export async function getStaticProps(context) {
   return {
     props: {
       selectedEvent: event,
+      revalidate: 30, // re-generates on incoming request after 30 sec.
     },
   };
 }
@@ -66,11 +71,25 @@ export async function getStaticProps(context) {
 // And for which id's it should cal  getStaticProps function and the component function
 
 export async function getStaticPaths() {
-  const events = await getAllEvents();
+  const events = await getFeaturedEvents();
+  // const events = await getAllEvents();
+  // now since we are using only featured events, for some events
+  // page will not be pre-generated.
+
+  // for fallback : false, For some events now we will get 404 error as they are now pre-generated,
+  // as we have defined fallback to false so only events'id we have in paths will have data.
+
+  // to overcome this :
+
+  // we have to set fallback to true. telling next.js that there are more pages, than ones we have prepared
+
+  // Then it will dynamically try to generate the page if it encounters a page that is not pre-generated
+
   const paths = events.map((event) => ({ params: { eventId: event.id } }));
   return {
     paths: paths,
-    fallback: false,
+    // fallback: false,
+    fallback: true,
   };
 }
 
