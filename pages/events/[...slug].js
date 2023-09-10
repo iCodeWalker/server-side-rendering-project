@@ -41,6 +41,14 @@ const FilteredEvent = (props) => {
       setLoadedEvents(events);
     }
   }, [data]);
+
+  let PageHeadData = (
+    <Head>
+      <title>Filtered Event </title>
+      <meta name="description" content={`A List of filtered events.`} />
+    </Head>
+  );
+
   // -----------------End-----------------
 
   // if (!filterData) {
@@ -49,7 +57,12 @@ const FilteredEvent = (props) => {
 
   // ------- For client side data fetching -------
   if (!loadedEvents) {
-    return <p className="center">Loading...</p>;
+    return (
+      <React.Fragment>
+        {PageHeadData}
+        <p className="center">Loading...</p>
+      </React.Fragment>
+    );
   }
 
   const year = filterData[0];
@@ -57,6 +70,16 @@ const FilteredEvent = (props) => {
 
   const numYear = +year;
   const numMonth = +month;
+
+  PageHeadData = (
+    <Head>
+      <title>Filtered Event </title>
+      <meta
+        name="description"
+        content={`All Events for ${numMonth}/${numYear}.`}
+      />
+    </Head>
+  );
 
   const filteredEvents = loadedEvents.filter((event) => {
     const eventDate = new Date(event.date);
@@ -74,6 +97,7 @@ const FilteredEvent = (props) => {
   if (isNaN(numYear) || isNaN(numMonth) || numMonth < 1 || numMonth > 12) {
     return (
       <React.Fragment>
+        {PageHeadData}
         <ErrorAlert>Invalid Filter</ErrorAlert>
         <div
           className="center"
@@ -96,6 +120,7 @@ const FilteredEvent = (props) => {
   if (!filteredEvents || filteredEvents.length === 0) {
     return (
       <React.Fragment>
+        {PageHeadData}
         <ErrorAlert>No events found for choosen filter</ErrorAlert>
         <div
           className="center"
@@ -118,13 +143,7 @@ const FilteredEvent = (props) => {
 
   return (
     <div>
-      <Head>
-        <title>Filtered Event </title>
-        <meta
-          name="description"
-          content={`All Events for ${numMonth}/${numYear}.`}
-        />
-      </Head>
+      {PageHeadData}
       <ResultsTitle date={date} />
       <EventList items={filteredEvents} />
     </div>
