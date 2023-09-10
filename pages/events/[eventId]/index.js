@@ -1,5 +1,8 @@
 import React from "react";
 import { useRouter } from "next/router";
+
+import Head from "next/head";
+
 import {
   getEventById,
   getAllEvents,
@@ -41,6 +44,10 @@ const EventDetailPage = (props) => {
 
   return (
     <React.Fragment>
+      <Head>
+        <title>{event.title}</title>
+        <meta name="description" content={event.description} />
+      </Head>
       <EventSummary title={event.title} />
       <EventLogistics
         date={event.date}

@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 import useSWR from "swr";
 // import { getFilteredEvents } from "@/dummy-data";
 
+import Head from "next/head";
+
 import EventList from "@/components/events/event-list";
 import ResultsTitle from "@/components/events/results-title";
 import ErrorAlert from "@/components/ui/error-alert";
@@ -116,6 +118,13 @@ const FilteredEvent = (props) => {
 
   return (
     <div>
+      <Head>
+        <title>Filtered Event </title>
+        <meta
+          name="description"
+          content={`All Events for ${numMonth}/${numYear}.`}
+        />
+      </Head>
       <ResultsTitle date={date} />
       <EventList items={filteredEvents} />
     </div>
